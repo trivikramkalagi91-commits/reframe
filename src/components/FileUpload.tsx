@@ -133,13 +133,7 @@ export default function FileUpload({
         <span className="text-[var(--muted)] ml-1">(Ctrl+O)</span>
       </button>
 
-      <div className="flex items-center gap-2 px-4 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm font-heading font-medium text-[var(--muted)]">
-      <FolderOpen size={14} />
-        MP4 / MOV / AVI / WebM
-      </div>
-      <p className="text-xs text-gray-500">
-        Supports: MP4, MOV, AVI, MKV, WebM, and most video formats
-      </p>
+
       {fileError && (
         <p className="text-xs text-red-500 mt-2 font-medium">
           {fileError}
