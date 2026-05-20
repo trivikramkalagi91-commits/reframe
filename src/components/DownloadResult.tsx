@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ExportResult } from "@/lib/types";
-import { formatBytes } from "@/lib/ffmpeg";
+import { formatBytes } from "@/lib/utils";
 import { Download, RotateCcw, Share2, AlertCircle } from "lucide-react";
 import LottiePlayer from "./LottiePlayer";
 import successAnim from "@/lib/lottie/success.json";
@@ -14,9 +14,10 @@ const SHARE_TWEET_TEXT =
 interface Props {
   result: ExportResult;
   onReset: () => void;
+  soundOnCompletion: boolean;
 }
 
-export default function DownloadResult({ result, onReset }: Props) {
+export default function DownloadResult({ result, onReset, soundOnCompletion }: Props) {
   const defaultName = `reframe_${result.width}x${result.height}`;
   const [name, setName] = useState(defaultName);
 
@@ -26,6 +27,12 @@ export default function DownloadResult({ result, onReset }: Props) {
 
   const shareHref = `https://x.com/intent/tweet?text=${encodeURIComponent(SHARE_TWEET_TEXT)}`;
 
+  useEffect(() => {
+    if (soundOnCompletion) {
+      const audio = new Audio("/sounds/export-complete.mp3");
+      audio.play().catch(console.error);
+    }
+  }, [soundOnCompletion]);
   const handleReset = () => {
     if (window.confirm("This will clear the current video and all settings. Continue?")) {
       onReset();
@@ -103,7 +110,7 @@ export default function DownloadResult({ result, onReset }: Props) {
             if (!isValid) e.preventDefault();
           }}
         >
-          <Download size={15} />
+          <Download size={15} aria-hidden="true"  />
           Download {result.format.toUpperCase()}
         </a>
         <a
@@ -122,7 +129,7 @@ export default function DownloadResult({ result, onReset }: Props) {
           onClick={handleReset}
           className="flex items-center gap-2 px-4 py-3 border border-[var(--border)] text-[var(--muted)] text-sm rounded-lg hover:bg-[var(--bg)] transition-colors"
         >
-          <RotateCcw size={14} />
+          <RotateCcw size={14} aria-hidden="true"  />
           New
         </button>
         <a
